@@ -60,6 +60,10 @@ sub Run {
 			my $NewProgressPercent = $ProgressPercent.'%';
 			$Ticket{FirstResponseTimeProgress} = $NewProgressPercent;
 		}
+		else
+		{
+			$Ticket{FirstResponseTimeProgress} = 'N/A';
+		}
         #end progress bar
         
         #begin SLA first response time remark
@@ -151,6 +155,10 @@ sub Run {
 			}
 			my $NewProgressPercent = $ProgressPercent.'%';
 			$Ticket{SolutionTimeProgress} = $NewProgressPercent;
+		}
+		else
+		{
+			$Ticket{SolutionTimeProgress} = 'N/A';
 		}
 		#end progress bar
         

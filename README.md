@@ -4,10 +4,7 @@
 
 1. Only for First Response Time and Solution Time.  
 
-2. The progress bar 'meter' will be gone after ticket is responded or closed.  
-(as per default OTRS escalation time display at ticket zoom screen).   
-
-3. Update progress bar css at CSS$OTRS_HOME/var/httpd/htdocs/skins/Agent/default/css/Core.PageLayout.css  
+2. Update progress bar css at CSS$OTRS_HOME/var/httpd/htdocs/skins/Agent/default/css/Core.PageLayout.css  
 
 				.progress-bar {
 					width: 100%;
