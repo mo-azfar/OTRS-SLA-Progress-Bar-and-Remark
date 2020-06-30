@@ -57,7 +57,8 @@ sub Run {
 			{
 				$ProgressPercent = 100;
 			}
-			$Ticket{FirstResponseTimeProgress} = $ProgressPercent;
+			my $NewProgressPercent = $ProgressPercent.'%';
+			$Ticket{FirstResponseTimeProgress} = $NewProgressPercent;
 		}
         #end progress bar
         
@@ -148,7 +149,8 @@ sub Run {
 			{
 				$ProgressPercent = 100;
 			}
-			$Ticket{SolutionTimeProgress} = $ProgressPercent;
+			my $NewProgressPercent = $ProgressPercent.'%';
+			$Ticket{SolutionTimeProgress} = $NewProgressPercent;
 		}
 		#end progress bar
         
