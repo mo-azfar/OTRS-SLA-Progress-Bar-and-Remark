@@ -4,10 +4,10 @@
 
 1. Only for First Response Time and Solution Time.  
 
-2. 	When SLA Progress < 50%, green bar
-	When SLA Progress >= 50%, yellow bar
-	When SLA Progress >= 100%, red bar
-	
+2. 	When SLA Progress < 50%, green bar  
+	When SLA Progress >= 50%, yellow bar  
+	When SLA Progress >= 100%, red bar  
+	  
 3. Update progress bar css at CSS$OTRS_HOME/var/httpd/htdocs/skins/Agent/default/css/Core.PageLayout.css  
 
 				.progress-bar {
