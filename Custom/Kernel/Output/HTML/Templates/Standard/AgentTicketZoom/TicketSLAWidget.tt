@@ -17,7 +17,7 @@
                         <label>[% Translate("First Response Time Progress") | html %]:</label>
                         <div class="Value">
                             <div class="progress-bar">[% Data.FirstResponseTimeProgress | html %]
-                            <span class="progress-bar-fill" style="width: [% Data.FirstResponseTimeProgress | html %];"></span>
+                            <span class="[% Data.FirstResponseTimeProgressClass | html %]" style="width: [% Data.FirstResponseTimeProgress | html %];" ></span>
                             </div>
                         </div>
                         <div class="Clear"></div>
@@ -37,7 +37,7 @@
                         <label>[% Translate("Solution Time Progress") | html %]:</label>
                         <div class="Value">
                             <div class="progress-bar">[% Data.SolutionTimeProgress | html %]
-                            <span class="progress-bar-fill" style="width: [% Data.SolutionTimeProgress | html %];"></span>
+                            <span class="[% Data.SolutionTimeProgressClass | html %]" style="width: [% Data.SolutionTimeProgress | html %];"></span>
                             </div>
                         </div>
                         <div class="Clear"></div>

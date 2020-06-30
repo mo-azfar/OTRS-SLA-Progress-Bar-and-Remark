@@ -53,8 +53,17 @@ sub Run {
 			my $Epoch3 = $Ticket{FirstResponseTimeDestinationTime};
 			my $Progress = (($Epoch2-$Epoch1)/($Epoch3-$Epoch1)) * 100;
 			my $ProgressPercent = sprintf('%.2f', $Progress);
-			if ($ProgressPercent > 100)
+			if ($ProgressPercent < 50)
 			{
+				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-green";
+			}
+			elsif (($ProgressPercent > 49) && ($ProgressPercent < 100))
+			{
+				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-yellow";
+			}
+			else
+			{
+				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-red";
 				$ProgressPercent = 100;
 			}
 			my $NewProgressPercent = $ProgressPercent.'%';
@@ -63,6 +72,7 @@ sub Run {
 		else
 		{
 			$Ticket{FirstResponseTimeProgress} = 'N/A';
+			$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill";
 		}
         #end progress bar
         
@@ -149,16 +159,27 @@ sub Run {
 			my $Epoch3 = $Ticket{SolutionTimeDestinationTime};
 			my $Progress = (($Epoch2-$Epoch1)/($Epoch3-$Epoch1)) * 100;
 			my $ProgressPercent = sprintf('%.2f', $Progress);
-			if ($ProgressPercent > 100)
+			if ($ProgressPercent < 50)
 			{
+				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-green";
+			}
+			elsif (($ProgressPercent > 49) && ($ProgressPercent < 100))
+			{
+				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-yellow";
+			}
+			else
+			{
+				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-red";
 				$ProgressPercent = 100;
 			}
+			
 			my $NewProgressPercent = $ProgressPercent.'%';
 			$Ticket{SolutionTimeProgress} = $NewProgressPercent;
 		}
 		else
 		{
 			$Ticket{SolutionTimeProgress} = 'N/A';
+			$Ticket{SolutionTimeProgressClass} = "progress-bar-fill";
 		}
 		#end progress bar
         
