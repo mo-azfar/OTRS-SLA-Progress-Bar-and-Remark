@@ -82,56 +82,29 @@ sub Run {
 		#my $TargetResponseTime;
         
 		#First Response logic
-		#If agent didnt yet response and current time is still below sla resposne time
-		if( $Ticket{'FirstResponseDiffInMin'} eq 0 && $Ticket{'FirstResponseTimeEscalation'} eq 0)
-		{
-        $Ticket{FirstResponseTimeStatus}="Within";
-        #$TargetResponseTime=$Ticket{FirstResponseTimeDestinationDate};
-		}
-		
-		#If agent didnt yet response and current time is over sla resposne time
-		if( $Ticket{'FirstResponseDiffInMin'} eq 0 && $Ticket{'FirstResponseTimeEscalation'} ne 0)
-		{
-		$Ticket{FirstResponseTimeStatus}="Breach";
-		#$TargetResponseTime=$Ticket{FirstResponseTimeDestinationDate};
-		}
-		
-		#If agent already response
-		if( $Ticket{'FirstResponseDiffInMin'} ne 0 && $Ticket{'FirstResponseTimeEscalation'} eq 0)
-		{
-			my $DateTimeObject1 = $Kernel::OM->Create(
-					'Kernel::System::DateTime',
-					ObjectParams => {
-					String   => $Ticket{FirstResponse},
-					}
-				);
-				
-			if ($Ticket{'FirstResponseDiffInMin'} < 0)
-			{
-				$Ticket{FirstResponseTimeStatus}="Breach";
-				
-				#my $Success = $DateTimeObject1->Subtract(
-				#	Minutes       => abs($Ticket{FirstResponseDiffInMin}),
-				#	AsWorkingTime => 1, # set to 1 to add given values as working time
-				#);
-                #
-				#$TargetResponseTime = $DateTimeObject1->ToString();
-					
-			}
-			else
-			{
+		#If agent didnt yet response 
+        if( $Ticket{'FirstResponseDiffInMin'} eq 0 )
+        {
+            if ( $Ticket{'FirstResponseTimeEscalation'} eq 0 ) #current time is still below sla response time
+            {
                 $Ticket{FirstResponseTimeStatus}="Within";
-				
-				#my $Success = $DateTimeObject1->Add(
-				#	Minutes       => $Ticket{FirstResponseDiffInMin},
-				#	AsWorkingTime => 1, # set to 1 to add given values as working time
-				#);
-				#
-				#$TargetResponseTime = $DateTimeObject1->ToString();
-			
-			}
-		}
-        #end SLA first response time remark
+            }
+            else #current time is over sla response time
+            {
+                $Ticket{FirstResponseTimeStatus}="Breach";
+            }
+        }
+        else #If agent already response
+        {
+            if ($Ticket{'FirstResponseDiffInMin'} =~/^\-/) #value negative
+            {
+                $Ticket{FirstResponseTimeStatus}="Breach";
+            }
+            else
+            {
+                $Ticket{FirstResponseTimeStatus}="Within";
+            }
+        }
         
         $LayoutObject->Block(
             Name => 'FirstResponseTimeRemark',
@@ -190,54 +163,30 @@ sub Run {
         #my $TargetSolutionTime;
         
         #Solution logic
-		#If agent didnt yet solved the ticket and current time is still below sla solution time
-		if( $Ticket{'SolutionDiffInMin'} eq 0 && $Ticket{'SolutionTimeEscalation'} eq 0)
-		{
-        $Ticket{SolutionTimeStatus} = "Within";
-		#$TargetSolutionTime = $Ticket{SolutionTimeDestinationDate};
-		}
-		
-		#If agent didnt yet solved the ticket and current time is over sla solution time
-		if( $Ticket{'SolutionDiffInMin'} eq 0 && $Ticket{'SolutionTimeEscalation'} ne 0)
-		{
-		$Ticket{SolutionTimeStatus} = "Breach";
-		#$TargetSolutionTime = $Ticket{SolutionTimeDestinationDate};
-		}
-		
-		#If agent already closed the ticket
-		if( $Ticket{'SolutionDiffInMin'} ne 0 && $Ticket{'SolutionTimeEscalation'} eq 0)
-		{
-			my $DateTimeObject2 = $Kernel::OM->Create(
-				'Kernel::System::DateTime',
-				ObjectParams => {
-				String   => $Ticket{Closed},
-				}
-			);
-		
-			if ($Ticket{'SolutionDiffInMin'} < 0)
-			{
-				$Ticket{SolutionTimeStatus} = "Breach";
-				
-				#my $Success2 = $DateTimeObject2->Subtract(
-				#	Minutes       => abs($Ticket{SolutionDiffInMin}),
-				#	AsWorkingTime => 1, # set to 1 to add given values as working time
-				#);
-                #
-				#$TargetSolutionTime = $DateTimeObject2->ToString();
-			}
-			else
-			{
-				$Ticket{SolutionTimeStatus} = "Within";
-				
-				#my $Success2 = $DateTimeObject2->Add(
-				#	Minutes       => $Ticket{SolutionDiffInMin},
-				#	AsWorkingTime => 1, # set to 1 to add given values as working time
-				#);
-                #
-				#$TargetSolutionTime = $DateTimeObject2->ToString();	
-			}
-		}
-        #end SLA solution time remark
+		 #If agent didnt yet solved the ticket 
+        if( $Ticket{'SolutionDiffInMin'} eq 0 )
+        {
+            if ( $Ticket{'SolutionTimeEscalation'} eq 0 ) #current time is still below sla solution time
+            {
+                $Ticket{SolutionTimeStatus}="Within";
+            }
+            else #current time over sla solution time
+            {
+                $Ticket{SolutionTimeStatus}="Breach";
+            }
+        }
+        else #If agent already solve
+        {
+            if( $Ticket{'SolutionDiffInMin'} =~/^\-/ ) #value negative
+            {
+                $Ticket{SolutionTimeStatus}="Breach";
+            }
+            else
+            {
+                $Ticket{SolutionTimeStatus}="Within";
+            }
+            
+        }
 		
         $LayoutObject->Block(
             Name => 'SolutionTimeRemark',
