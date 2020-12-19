@@ -10,4 +10,17 @@
             </Hash>
         </Value>
     </Setting>
+	<Setting Name="Loader::Module::AgentTicketZoom###005-Ticket" Required="0" Valid="1">
+        <Description Translatable="1">Loader module registration for the agent interface (Ticket SLA widget).</Description>
+        <Navigation>Frontend::Agent::ModuleRegistration::Loader</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="CSS">
+                    <Array>
+                        <Item>Core.Agent.TicketSLAWidget.css</Item>
+                    </Array>
+                </Item>
+            </Hash>
+        </Value>
+    </Setting>
 </otrs_config>

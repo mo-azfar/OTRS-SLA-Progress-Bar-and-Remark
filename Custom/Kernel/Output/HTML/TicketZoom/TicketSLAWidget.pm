@@ -30,172 +30,146 @@ sub Run {
 		DynamicFields => 0,
 		Extended => 1,
     );
-	
+		
     #my %Ticket    = %{ $Param{Ticket} };
     my %AclAction = %{ $Param{AclAction} };
-
-    # show first response time if needed
-    if ( defined $Ticket{FirstResponseTime} || defined $Ticket{FirstResponseDiffInMin} || defined $Ticket{FirstResponseTimeEscalation} ) {
-        
-		#begin progress bar
-		if ( defined $Ticket{FirstResponseTime} )
-		{
-			my $CreatedTimeObject = $Kernel::OM->Create(
-				'Kernel::System::DateTime',
-					ObjectParams => {
-						String   => $Ticket{Created},
-									}
-			);
-        
-			my $CurrentTimeObject = $Kernel::OM->Create('Kernel::System::DateTime');
-			my $Epoch1 = $CreatedTimeObject->ToEpoch();
-			my $Epoch2 = $CurrentTimeObject->ToEpoch();
-			my $Epoch3 = $Ticket{FirstResponseTimeDestinationTime};
-			my $Progress = (($Epoch2-$Epoch1)/($Epoch3-$Epoch1)) * 100;
-			my $ProgressPercent = sprintf('%.2f', $Progress);
-			if ($ProgressPercent < 50)
+	
+	$Ticket{FirstResponseDiffInMin}      ||= 0;  #if ticket responded by agent, how many minute taken by agent to response (+ within sla, - breach sla)
+	$Ticket{FirstResponseTimeEscalation} ||= 0;  #if ticket not yet respond, value is 0 (current time still within sla) OR 1 (current time is over sla)
+	$Ticket{FirstResponseTimeNotification} ||=0; #if true (1), notify - x% of escalation has reached
+	
+	$Ticket{SolutionDiffInMin}           ||= 0;  #if ticket close by agent, how many minute taken by agent to close it (+ within sla, - breach sla)
+	$Ticket{SolutionTimeEscalation}      ||= 0; #if ticket not yet close, value is 0 (current time still within sla) OR 1 (current time is over sla)
+	$Ticket{SolutionTimeNotification}    ||= 0; #if true (1), notify - x% of escalation has reached
+	
+	$Ticket{FirstResponseTimeProgress} = "N/A";
+	$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill";
+	
+	$Ticket{SolutionTimeProgress} = "N/A";
+	$Ticket{SolutionTimeProgressClass} = "progress-bar-fill";
+	
+	#create based time object
+	my $CreatedTimeObject = $Kernel::OM->Create(
+	'Kernel::System::DateTime',
+		ObjectParams => {
+			String   => $Ticket{Created},
+						}
+	);
+		
+	my $CurrentTimeObject = $Kernel::OM->Create('Kernel::System::DateTime');
+	my $Epoch1 = $CreatedTimeObject->ToEpoch();
+	my $Epoch2 = $CurrentTimeObject->ToEpoch();
+				
+	#First Response logic
+	if (defined $Ticket{FirstResponseTime} || $Ticket{FirstResponseDiffInMin} ne 0 || $Ticket{FirstResponseTimeEscalation} ne 0 )
+	{	
+		my $ProgressPercent;
+		if( $Ticket{'FirstResponseDiffInMin'} eq 0 )  #If agent didnt yet response 
+		{			
+			if ( $Ticket{'FirstResponseTimeEscalation'} eq 0 ) #current time is still below sla response time
 			{
-				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-green";
+				my $Epoch3 = $Ticket{FirstResponseTimeDestinationTime};
+				my $Progress = (($Epoch2-$Epoch1)/($Epoch3-$Epoch1)) * 100;
+				$ProgressPercent = sprintf('%.2f', $Progress);
+							
+				if ($Ticket{'FirstResponseTimeNotification'} eq 1) #if value notify before is 1 (almost overdue x% sla time)
+				{
+					$Ticket{FirstResponseTimeStatus} = "Within (Notify Before)";
+					$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-yellow";
+					$Ticket{FirstResponseTimeProgress} = $ProgressPercent.'%';
+				}
+				else
+				{
+					$Ticket{FirstResponseTimeStatus} = "Within";
+					$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-green";
+					$Ticket{FirstResponseTimeProgress} = $ProgressPercent.'%';
+				}				
 			}
-			elsif (($ProgressPercent > 49) && ($ProgressPercent < 100))
+			else #current time is over sla response time
 			{
-				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-yellow";
+				$Ticket{FirstResponseTimeStatus} = "Breach";
+				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-red";
+				$Ticket{FirstResponseTimeProgress} = "100%";
+				
+			}
+			
+		}
+		else #If agent already response
+		{
+			if ($Ticket{'FirstResponseDiffInMin'} =~/^\-/) #value negative or overdue sla
+			{
+				$Ticket{FirstResponseTimeStatus} = "Breach";
+				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-red";
 			}
 			else
-			{
-				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-red";
-				$ProgressPercent = 100;
-			}
-			my $NewProgressPercent = $ProgressPercent.'%';
-			$Ticket{FirstResponseTimeProgress} = $NewProgressPercent;
+			{				
+				$Ticket{FirstResponseTimeStatus} = "Within";
+				$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill-green";
+			}	
 		}
-		else
-		{
-			$Ticket{FirstResponseTimeProgress} = 'N/A';
-			$Ticket{FirstResponseTimeProgressClass} = "progress-bar-fill";
-		}
-        #end progress bar
-        
-        #begin SLA first response time remark
-        $Ticket{FirstResponseDiffInMin}      ||= 0;
-		$Ticket{FirstResponseTimeEscalation} ||= 0;
-		#my $TargetResponseTime;
-        
-		#First Response logic
-		#If agent didnt yet response 
-        if( $Ticket{'FirstResponseDiffInMin'} eq 0 )
-        {
-            if ( $Ticket{'FirstResponseTimeEscalation'} eq 0 ) #current time is still below sla response time
-            {
-                $Ticket{FirstResponseTimeStatus}="Within";
-            }
-            else #current time is over sla response time
-            {
-                $Ticket{FirstResponseTimeStatus}="Breach";
-            }
-        }
-        else #If agent already response
-        {
-            if ($Ticket{'FirstResponseDiffInMin'} =~/^\-/) #value negative
-            {
-                $Ticket{FirstResponseTimeStatus}="Breach";
-            }
-            else
-            {
-                $Ticket{FirstResponseTimeStatus}="Within";
-            }
-        }
-        
-        $LayoutObject->Block(
+			
+		$LayoutObject->Block(
             Name => 'FirstResponseTimeRemark',
             Data => { %Ticket, %AclAction },
         );
-        
-    }
-
-    # show solution time if needed
-	if ( defined $Ticket{SolutionTime} || defined $Ticket{SolutionDiffInMin} || defined $Ticket{SolutionTimeEscalation} ) {
-        
-		#begin progress bar
-		if ( defined $Ticket{SolutionTime} )
-		{
-			my $CreatedTimeObject = $Kernel::OM->Create(
-				'Kernel::System::DateTime',
-					ObjectParams => {
-						String   => $Ticket{Created},
-									}
-			);
-        
-			my $CurrentTimeObject = $Kernel::OM->Create('Kernel::System::DateTime');
-			my $Epoch1 = $CreatedTimeObject->ToEpoch();
-			my $Epoch2 = $CurrentTimeObject->ToEpoch();
-			my $Epoch3 = $Ticket{SolutionTimeDestinationTime};
-			my $Progress = (($Epoch2-$Epoch1)/($Epoch3-$Epoch1)) * 100;
-			my $ProgressPercent = sprintf('%.2f', $Progress);
-			if ($ProgressPercent < 50)
+	}
+	
+	#Solution logic
+	if (defined $Ticket{SolutionTime} || $Ticket{SolutionDiffInMin} ne 0 || $Ticket{SolutionTimeEscalation} ne 0 )
+	{	
+		my $ProgressPercent;
+		if( $Ticket{'SolutionDiffInMin'} eq 0 )  #If agent didnt yet close
+		{			
+			if ( $Ticket{'SolutionTimeEscalation'} eq 0 ) #current time is still below sla solution time
 			{
-				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-green";
+				my $Epoch3 = $Ticket{SolutionTimeDestinationTime};
+				my $Progress = (($Epoch2-$Epoch1)/($Epoch3-$Epoch1)) * 100;
+				$ProgressPercent = sprintf('%.2f', $Progress);
+							
+				if ($Ticket{'SolutionTimeNotification'} eq 1) #if value notify before is 1 (almost overdue x% sla time)
+				{
+					$Ticket{SolutionTimeStatus} = "Within (Notify Before)";
+					$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-yellow";
+					$Ticket{SolutionTimeProgress} = $ProgressPercent.'%';
+				}
+				else
+				{
+					$Ticket{SolutionTimeStatus} = "Within";
+					$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-green";
+					$Ticket{SolutionTimeProgress} = $ProgressPercent.'%';
+				}				
 			}
-			elsif (($ProgressPercent > 49) && ($ProgressPercent < 100))
+			else #current time is over sla solution time
 			{
-				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-yellow";
-			}
-			else
-			{
+				$Ticket{SolutionTimeStatus} = "Breach";
 				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-red";
-				$ProgressPercent = 100;
+				$Ticket{SolutionTimeProgress} = "100%";
+				
 			}
 			
-			my $NewProgressPercent = $ProgressPercent.'%';
-			$Ticket{SolutionTimeProgress} = $NewProgressPercent;
 		}
-		else
+		else #If agent already solution
 		{
-			$Ticket{SolutionTimeProgress} = 'N/A';
-			$Ticket{SolutionTimeProgressClass} = "progress-bar-fill";
+			if ($Ticket{'SolutionDiffInMin'} =~/^\-/) #value negative or overdue sla
+			{
+				$Ticket{SolutionTimeStatus} = "Breach";
+				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-red";
+			}
+			else
+			{				
+				$Ticket{SolutionTimeStatus} = "Within";
+				$Ticket{SolutionTimeProgressClass} = "progress-bar-fill-green";
+			}	
 		}
-		#end progress bar
-        
-        #begin SLA solution time remark
-        $Ticket{SolutionDiffInMin}           ||= 0;
-		$Ticket{SolutionTimeEscalation}      ||= 0;
-		$Ticket{Closed}	||= 0;
-        #my $TargetSolutionTime;
-        
-        #Solution logic
-		 #If agent didnt yet solved the ticket 
-        if( $Ticket{'SolutionDiffInMin'} eq 0 )
-        {
-            if ( $Ticket{'SolutionTimeEscalation'} eq 0 ) #current time is still below sla solution time
-            {
-                $Ticket{SolutionTimeStatus}="Within";
-            }
-            else #current time over sla solution time
-            {
-                $Ticket{SolutionTimeStatus}="Breach";
-            }
-        }
-        else #If agent already solve
-        {
-            if( $Ticket{'SolutionDiffInMin'} =~/^\-/ ) #value negative
-            {
-                $Ticket{SolutionTimeStatus}="Breach";
-            }
-            else
-            {
-                $Ticket{SolutionTimeStatus}="Within";
-            }
-            
-        }
-		
-        $LayoutObject->Block(
+			
+		$LayoutObject->Block(
             Name => 'SolutionTimeRemark',
             Data => { %Ticket, %AclAction },
         );
-    }
-
+	}
+	
     # set display options
-    $Param{WidgetTitle} = Translatable('SLA Information');
+    $Param{WidgetTitle} = Translatable('SLA Progress Bar');
     $Param{Hook}        = $ConfigObject->Get('Ticket::Hook') || 'Ticket#';
 
     my $Output = $LayoutObject->Output(

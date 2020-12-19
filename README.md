@@ -2,53 +2,14 @@
 - For OTRS CE v6.0
 - Display SLA Progress Bar and Its Remark (Breach or Within SLA) at Ticket Zoom Screen 
 
+Paypal: [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/MohdAzfar?locale.x=en_US)     
+  
 1. Only for First Response Time and Solution Time.  
 
-2. 	When SLA Progress < 50%, green bar  
-	When SLA Progress >= 50%, yellow bar  
-	When SLA Progress >= 100%, red bar  
-	  
-3. Update progress bar css at CSS$OTRS_HOME/var/httpd/htdocs/skins/Agent/default/css/Core.PageLayout.css  
-
-		.progress-bar {
-			width: 100%;
-			background-color: #e0e0e0;
-			padding: 3px;
-			border-radius: 3px;
-			box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
-		}
-					
-		.progress-bar-fill {
-		    display: block;
-		    height: 12px;
-		    background-color: #fefefe;
-		    border-radius: 3px;
-		    transition: width 500ms ease-in-out;
-		}
-		    
-		.progress-bar-fill-green {
-		    display: block;
-		    height: 12px;
-		    background-color: #64ff56;
-		    border-radius: 3px;
-		    transition: width 500ms ease-in-out;
-		}
-		
-		.progress-bar-fill-yellow {
-		    display: block;
-		    height: 12px;
-		    background-color: #f8ff56;
-		    border-radius: 3px;
-		    transition: width 500ms ease-in-out;
-		}
-		
-		.progress-bar-fill-red {
-		    display: block;
-		    height: 12px;
-		    background-color: #f64242;
-		    border-radius: 3px;
-		    transition: width 500ms ease-in-out;
-		}
-
-
-[![image-1.png](https://i.postimg.cc/qvHM95FW/image-1.png)](https://postimg.cc/TpQ6bCfc)  
+2. 	When ticket is within SLA , green bar (applicable to open and closed ticket)  
+	When ticket is within SLA and reached 'notify before' time (if configured), yellow bar (applicable to open ticket only)  
+	When ticket is not within SLA, red bar (applicable to open and closed ticket)  
+  
+[![1.png](https://i.postimg.cc/8PXvx6VD/1.png)](https://postimg.cc/Lnfh1hX0)  
+  
+[![2.png](https://i.postimg.cc/zfKRL2HX/2.png)](https://postimg.cc/SXQK3rGw)  
