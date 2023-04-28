@@ -1,4 +1,4 @@
-# OTRS-SLA-Progress-Bar-and-Remark
+# OTRS-Znuny-SLA-Progress-Bar-and-Remark
 - For OTRS CE v6.0 / Znuny-LTS
 - Display SLA Escalation Progress Bar and Its Remark (Breach or Within Escalation) at Ticket Zoom Screen 
 
