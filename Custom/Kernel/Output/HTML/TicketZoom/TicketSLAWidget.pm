@@ -1,3 +1,6 @@
+# --
+# Copyright (C) 2022 mo-azfar, https://github.com/mo-azfar/OTRS-SLA-Progress-Bar-and-Remark
+#
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
@@ -21,17 +24,9 @@ sub Run {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-	my $ParamObject     = $Kernel::OM->Get('Kernel::System::Web::Request');
+	#my $ParamObject     = $Kernel::OM->Get('Kernel::System::Web::Request');
 	
-	my ($TicketID) = $ParamObject->GetParam( Param => 'TicketID' );
-	my %Ticket = $TicketObject->TicketGet(
-        TicketID => $TicketID,
-		UserID        => 1,
-		DynamicFields => 0,
-		Extended => 1,
-    );
-		
-    #my %Ticket    = %{ $Param{Ticket} };
+	my %Ticket    = %{ $Param{Ticket} };
     my %AclAction = %{ $Param{AclAction} };
 	
 	$Ticket{FirstResponseDiffInMin}      ||= 0;  #if ticket responded by agent, how many minute taken by agent to response (+ within sla, - breach sla)
