@@ -10,6 +10,8 @@ Paypal: [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif
 	When ticket is within SLA / Escalation and reached 'notify before' time (if configured), yellow bar (applicable to open ticket only)  
 	When ticket is not within SLA / Escalation , red bar (applicable to open and closed ticket)  
   
-[![1.png](https://i.postimg.cc/8PXvx6VD/1.png)](https://postimg.cc/Lnfh1hX0)  
-  
-[![2.png](https://i.postimg.cc/zfKRL2HX/2.png)](https://postimg.cc/SXQK3rGw)  
+[url=https://postimg.cc/S21ky6q1][img]https://i.postimg.cc/S21ky6q1/escalation-info6.png[/img][/url]
+
+[url=https://postimg.cc/2Lqm31Sk][img]https://i.postimg.cc/2Lqm31Sk/escalation-info7.png[/img][/url]
+
+
