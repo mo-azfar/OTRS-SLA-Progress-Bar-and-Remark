@@ -1,3 +1,6 @@
+# --
+# Copyright (C) 2022 mo-azfar, https://github.com/mo-azfar/OTRS-SLA-Progress-Bar-and-Remark
+#
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
@@ -16,41 +19,23 @@
                         <!-- begin progress bar -->
                         <label>[% Translate("First Response Time Progress") | html %]:</label>
                         <div class="Value">
-                            <div class="progress-bar">[% Data.FirstResponseTimeProgress | html %]
+                            <div class="progress-bar">[% Data.FirstResponseTimeProgress | html %] [% Data.FirstResponseTimeStatus | html %]
                             <span class="[% Data.FirstResponseTimeProgressClass | html %]" style="width: [% Data.FirstResponseTimeProgress | html %];" ></span>
                             </div>
                         </div>
                         <div class="Clear"></div>
                         <!-- end progress bar -->
-                        <!-- begin sla first response time remark -->
-                        <label>[% Translate("First Response Time Status") | html %]:</label>
-                        <div class="Value">
-                            <p title="[% Translate("Status") | html %]: [% Data.FirstResponseTimeStatus | html %]" class="[% Data.FirstResponseTimeClass | html %]">
-                            [% Data.FirstResponseTimeStatus | html %]
-                           </p>
-                        </div>
-                        <div class="Clear"></div>
-                        <!-- end sla first response time remark -->
 [% RenderBlockEnd("FirstResponseTimeRemark") %]
 [% RenderBlockStart("SolutionTimeRemark") %]
                         <!-- begin progress bar -->
                         <label>[% Translate("Solution Time Progress") | html %]:</label>
                         <div class="Value">
-                            <div class="progress-bar">[% Data.SolutionTimeProgress | html %]
+                            <div class="progress-bar">[% Data.SolutionTimeProgress | html %] [% Data.SolutionTimeStatus | html %]
                             <span class="[% Data.SolutionTimeProgressClass | html %]" style="width: [% Data.SolutionTimeProgress | html %];"></span>
                             </div>
                         </div>
                         <div class="Clear"></div>
                         <!-- end progress bar -->
-                        <!-- begin sla solution time remark -->
-                        <label>[% Translate("Solution Time Status") | html %]:</label>
-                        <div class="Value">
-                            <p title="[% Translate("Status") | html %]: [% Data.SolutionTimeStatus | html %]" class="[% Data.SolutionTimeClass | html %]">
-                            [% Data.SolutionTimeStatus | html %]
-                           </p>
-                        </div>
-                        <div class="Clear"></div>
-                        <!-- end sla solution time remark -->
 [% RenderBlockEnd("SolutionTimeRemark") %]
                     </fieldset>
                 </div>
