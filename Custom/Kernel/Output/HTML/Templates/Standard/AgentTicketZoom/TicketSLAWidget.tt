@@ -17,24 +17,23 @@
                     <fieldset class="TableLike FixedLabelSmall Narrow">
 [% RenderBlockStart("FirstResponseTimeRemark") %]                   
                         <!-- begin progress bar -->
+                        <div class="ProgressField">
                         <label>[% Translate("First Response Time Progress") | html %]:</label>
-                        <div class="Value">
-                            <div class="progress-bar">[% Data.FirstResponseTimeProgress | html %] [% Data.FirstResponseTimeStatus | html %]
-                            <span class="[% Data.FirstResponseTimeProgressClass | html %]" style="width: [% Data.FirstResponseTimeProgress | html %];" ></span>
-                            </div>
+                        <div class="progress-bar" title="[% Data.FirstResponseTimeProgress | html %] [% Data.FirstResponseTimeStatus | html %]">
+                            <span class="[% Data.FirstResponseTimeProgressClass | html %]" style="width: [% Data.FirstResponseTimeProgress | html %];"></span>
                         </div>
-                        <div class="Clear"></div>
+                        </div>
                         <!-- end progress bar -->
 [% RenderBlockEnd("FirstResponseTimeRemark") %]
+
 [% RenderBlockStart("SolutionTimeRemark") %]
                         <!-- begin progress bar -->
+                        <div class="ProgressField">
                         <label>[% Translate("Solution Time Progress") | html %]:</label>
-                        <div class="Value">
-                            <div class="progress-bar">[% Data.SolutionTimeProgress | html %] [% Data.SolutionTimeStatus | html %]
+                        <div class="progress-bar" title="[% Data.SolutionTimeProgress | html %] [% Data.SolutionTimeStatus | html %]">
                             <span class="[% Data.SolutionTimeProgressClass | html %]" style="width: [% Data.SolutionTimeProgress | html %];"></span>
-                            </div>
                         </div>
-                        <div class="Clear"></div>
+                        </div>
                         <!-- end progress bar -->
 [% RenderBlockEnd("SolutionTimeRemark") %]
                     </fieldset>

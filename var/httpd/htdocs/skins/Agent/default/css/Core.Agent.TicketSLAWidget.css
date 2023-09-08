@@ -9,46 +9,60 @@ did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
  * @section     Ticket SLA Widget
  */
 
-@media screen,projection,tv,handheld {
+@media screen,
+projection,
+tv,
+handheld {
 
-.progress-bar {
-			width: 100%;
-			background-color: #e0e0e0;
-			padding: 3px;
-			border-radius: 3px;
-			box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
-		}
-					
-	.progress-bar-fill {
-		display: block;
-		height: 12px;
-		background-color: #fefefe;
-		border-radius: 3px;
-		transition: width 500ms ease-in-out;
-	}
-		
-	.progress-bar-fill-green {
-		display: block;
-		height: 12px;
-		background-color: #64ff56;
-		border-radius: 3px;
-		transition: width 500ms ease-in-out;
-	}
-	
-	.progress-bar-fill-yellow {
-		display: block;
-		height: 12px;
-		background-color: #f8ff56;
-		border-radius: 3px;
-		transition: width 500ms ease-in-out;
-	}
-	
-	.progress-bar-fill-red {
-		display: block;
-		height: 12px;
-		background-color: #f64242;
-		border-radius: 3px;
-		transition: width 500ms ease-in-out;
-	}
+    .ProgressField:after {
+        content: "\a";
+        white-space: pre;
+    }
 
-} /* end @media */
+    .ProgressField:last-child:after {
+        content: "";
+    }
+
+    .progress-bar {
+        width: 98%;
+        background-color: #e0e0e0;
+        padding: 4px;
+        border-radius: 25px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+    }
+
+    .progress-bar-fill {
+        display: block;
+        height: 12px;
+        background-color: #fefefe;
+        border-radius: 25px;
+        transition: width 500ms ease-in-out;
+    }
+
+    .progress-bar-fill-green {
+        display: block;
+        height: 12px;
+        background-color: #64ff56;
+        border-radius: 25px;
+        transition: width 500ms ease-in-out;
+    }
+
+    .progress-bar-fill-yellow {
+        display: block;
+        height: 12px;
+        background-color: #f8ff56;
+        border-radius: 25px;
+        transition: width 500ms ease-in-out;
+    }
+
+    .progress-bar-fill-red {
+        display: block;
+        height: 12px;
+        background-color: #f64242;
+        border-radius: 25px;
+        transition: width 500ms ease-in-out;
+    }
+
+}
+
+/* end @media */
